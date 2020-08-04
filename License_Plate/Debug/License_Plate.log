@@ -1,0 +1,3 @@
+﻿  pch.cpp
+  License_Plate.cpp
+c:\users\lg\downloads\license_plate\plates\license_plate\license_plate\license_plate.cpp(5): fatal error C1083: 포함 파일을 열 수 없습니다. 'opencv2/opencv.hpp': No such file or directory
