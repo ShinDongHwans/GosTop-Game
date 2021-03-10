@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Scripts/Game/Unit/NPC/Enemy/Monster.cs.meta
+guid: 0d33815e3ef9de14ea332faf411155df
+=======
+guid: ec8cb87e154217042bed645e09d13097
+>>>>>>> 2f4f62ff8c0f63cd7823f35107456a57e4b31e58:Assets/Scripts/Game/Unit/NPC/Enemy/Monster.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
