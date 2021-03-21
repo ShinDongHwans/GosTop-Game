@@ -52,7 +52,7 @@ public class Player
         else if (cType == 2)
         {
             underCards[1].Add(card);
-            if (card.CardSeasonCheck(12))
+            if (card.CardSeasonCheck(11))
                 bgwang++;
         }
         //단

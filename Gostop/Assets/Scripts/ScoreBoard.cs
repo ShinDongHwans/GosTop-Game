@@ -6,13 +6,23 @@ using UnityEngine.UI;
 public class ScoreBoard : MonoBehaviour
 {
     static int defaultScoreTextSize = 25;
-    static int scoreBoardMoveDirect = 1;
+    static int scoreBoardMoveDirect = -1;
+    int topBanner = 0;
+    int topShownPlayer
+    {
+        get { return GameManager.instance.whoseTurn; }
+    }
     public GameObject[] scoresBoard = new GameObject[GameManager.maxNumberofPlayers];
     
     public int index;
     int maxIndex
     {
-        get { return (GameManager.numberofPlayers / 2);  }
+        get
+        {
+            if (GameManager.maxNumberofPlayers != 1)  
+                return ((GameManager.numberofPlayers - 1) / (GameManager.maxNumberofPlayers - 1));
+            return GameManager.numberofPlayers - 1;
+        }
     }
     public int[] rotationNumbers;
 
@@ -31,13 +41,12 @@ public class ScoreBoard : MonoBehaviour
 
     private void ShownthPlayerScoreToithBox(int n, int i)
     {
-        GameManager gameManager = GameManager.instance;
-        if (n == -1)
+        if (n <= 0)
         {
             scoresBoard[i].GetComponent<Text>().text = "";
             return;
         }
-        scoresBoard[i].GetComponent<Text>().text = "Player" + n.ToString() + ": " + (gameManager.GetnthPlayerScore(n)).ToString();
+        scoresBoard[i].GetComponent<Text>().text = "Player" + n.ToString() + ": " + (GameManager.instance.GetnthPlayerScore(n)).ToString();
         scoresBoard[i].GetComponent<Text>().fontSize = defaultScoreTextSize;
         return;
     }
@@ -45,32 +54,32 @@ public class ScoreBoard : MonoBehaviour
     //----------------------public Function----------------------
     public void RotateShownScoreBoard()
     {
-        ShownthPlayerScoreToithBox(rotationNumbers[index * 2], 1);
-        if (rotationNumbers.Length > index * 2 + 1)
+        ShownthPlayerScoreToithBox(rotationNumbers[index * (GameManager.maxNumberofPlayers-1)], (1 + topBanner)%GameManager.maxNumberofPlayers);
+        if (GameManager.maxNumberofPlayers == 3 && rotationNumbers.Length > index * 2 + 1)
         {
-            ShownthPlayerScoreToithBox(rotationNumbers[index * 2 + 1], 2);
+            ShownthPlayerScoreToithBox(rotationNumbers[index * (GameManager.maxNumberofPlayers - 1) + 1], (2 + topBanner) % GameManager.maxNumberofPlayers);
         }
-        else
+        else if((2 + topBanner) % GameManager.maxNumberofPlayers != topBanner)
         {
-            ShownthPlayerScoreToithBox(-1, 2);
-        }
+            ShownthPlayerScoreToithBox(-1, (2 + topBanner) % GameManager.maxNumberofPlayers);
+        }       
         index+=scoreBoardMoveDirect;
-        if (index >= maxIndex) index = index%maxIndex;
-        else if (index < 0) index = maxIndex - 1;
+        if (index > maxIndex) index = 0;
+        else if (index < 0) index = maxIndex;
+        return;
     }
 
     public void ChangeTurn()
     {
         MakeRotationNumbers();
         index = 0;
-        ShownthPlayerScoreToithBox(GameManager.instance.whoseTurn, 0);
+        ShownthPlayerScoreToithBox(topShownPlayer, topBanner);
         RotateShownScoreBoard();
     }
 
     public void Initializing()
     {
-        int validNum = GameManager.numberofPlayers > GameManager.maxNumberofPlayers ? GameManager.maxNumberofPlayers : GameManager.numberofPlayers;
-        for (int i = 0; i < validNum; i++)
+        for (int i = 0; i < GameManager.maxNumberofPlayers; i++)
         {
             scoresBoard[i].SetActive(true);
         }

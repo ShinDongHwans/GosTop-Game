@@ -61,6 +61,15 @@ public class FloorCards : MonoBehaviour
         return floorCards[numberOfCardsOnTHisFloor].GetComponent<CardViewManager>().RemoveCard();                                                                                                                
     }
 
+    void GetNTopCards(int n)
+    {
+        while (n-- != 0)
+        {
+            GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+        }
+        return;
+    }
+
     public FloorManager.PlayResult AddCardToThisFloorFromMainDeck(Card inputCard)
     {
         if (inputCard.cardSeason == season){
@@ -79,15 +88,13 @@ public class FloorCards : MonoBehaviour
                 else if(numberOfCardsOnTHisFloor == 3)
                 {
                     GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+                    GetNTopCards(3);
                     return FloorManager.PlayResult.따닥;
                 }
                 else
                 {
                     GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+                    GetNTopCards(1);
                     return FloorManager.PlayResult.기본;
                 }
             }
@@ -141,7 +148,7 @@ public class FloorCards : MonoBehaviour
                 if(cardFromMainDeck == null)
                 {
                     GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+                    GetNTopCards(1);
                     return FloorManager.PlayResult.기본;
                 }
                 else
@@ -156,7 +163,7 @@ public class FloorCards : MonoBehaviour
                     {
                         GameManager.instance.floor.GetComponent<FloorManager>().AddCardOnFloorFromMainDeck(cardFromMainDeck);
                         GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                        GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+                        GetNTopCards(1);
                         return FloorManager.PlayResult.기본;
                     }
                 }
@@ -164,7 +171,7 @@ public class FloorCards : MonoBehaviour
                 if(cardFromMainDeck == null)
                 {
                     GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+                    GameManager.instance.ObtainCardbynthPlayer(cardFromMainDeck, GameManager.instance.whoseTurn);
                     return FloorManager.PlayResult.기본;
                 }
                 else
@@ -172,37 +179,26 @@ public class FloorCards : MonoBehaviour
                     if(cardFromMainDeck.cardSeason == season)
                     {
                         GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                        GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                        GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                        GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+                        GameManager.instance.ObtainCardbynthPlayer(cardFromMainDeck, GameManager.instance.whoseTurn);
+                        GetNTopCards(2);
                         return FloorManager.PlayResult.따닥;
                     }
                     else
                     {
                         GameManager.instance.floor.GetComponent<FloorManager>().AddCardOnFloorFromMainDeck(cardFromMainDeck);
                         GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                        GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
+                        GetNTopCards(1);
                         return FloorManager.PlayResult.기본;
                     }
                 }
             case (3):
-                if(cardFromMainDeck == null)
-                {
-                    GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    return FloorManager.PlayResult.따닥;
-                }
-                else
+                if(cardFromMainDeck != null)
                 {
                     GameManager.instance.floor.GetComponent<FloorManager>().AddCardOnFloorFromMainDeck(cardFromMainDeck);
-                    GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    GameManager.instance.ObtainCardbynthPlayer(RemoveCardFromTopSlot(), GameManager.instance.whoseTurn);
-                    return FloorManager.PlayResult.따닥;
                 }
+                GameManager.instance.ObtainCardbynthPlayer(inputCard, GameManager.instance.whoseTurn);
+                GetNTopCards(3);
+                return FloorManager.PlayResult.따닥;
             default:
                 Debug.Log("Errored: there are too many cards on " + season.ToString() + " floor");
                 return FloorManager.PlayResult.Error;

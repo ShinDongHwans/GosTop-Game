@@ -36,7 +36,7 @@ public class HandCard : MonoBehaviour
     public void SetHandCard(Card card)
     {
         this.card = card;
-        ShowCard(GameManager.instance.gState == GameManager.GameState.MyTurn);
+        ShowCard(GameManager.instance.playerNumber == GameManager.instance.shownPlayer);
         return;
     }
 

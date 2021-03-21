@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
     public GameObject scoreBoard;
     public GameObject floor;
     public GameObject ownCards;
-    public GameObject showindow;
+    public GameObject remainNumber;
+    public GameObject showWindow;
     public GameObject[] ChangeViewButtons = new GameObject[2];
 
     public Player[] playersList;
@@ -50,6 +51,7 @@ public class GameManager : MonoBehaviour
     public int totalTurn;
     public int whoseTurn;
     public int shownPlayer;
+    public int playerNumber;
     public GameState gState;
     bool needRotation;
 
@@ -113,7 +115,9 @@ public class GameManager : MonoBehaviour
         if (GameFinishChecker())
         {
             gState = GameState.Finish;
-            Debug.Log("Game Finished");
+            showWindow.SetActive(true);
+            scoreBoard.GetComponent<ScoreBoard>().ChangeTurn();
+            return;
         }
         totalTurn++;
         whoseTurn += turnMoveDirection;
@@ -125,6 +129,8 @@ public class GameManager : MonoBehaviour
         {
             whoseTurn = numberofPlayers;
         }
+        playerNumber = whoseTurn;
+        gState = GameState.MyTurn;
         ChangeShownPlayer(whoseTurn);
         scoreBoard.GetComponent<ScoreBoard>().ChangeTurn();
         return;
@@ -164,6 +170,7 @@ public class GameManager : MonoBehaviour
     {
         //---------------------set to default----------------------
         totalTurn = 0;
+        playerNumber = 1;
         AllPlayerReset();
         ResetMainDeck();
         //---------------------Card Spreading-----------------------
@@ -201,7 +208,7 @@ public class GameManager : MonoBehaviour
         scoreBoard.GetComponent<ScoreBoard>().Initializing();
         hand.GetComponent<MyHandShown>().Initializing();
         ownCards.GetComponent<OwnCardManager>().ReSetTotalManager();
-        showindow.GetComponent<RemainCard>().ShowRemainNumberOfCaradAtMainDeck();
+        remainNumber.GetComponent<RemainCard>().ShowRemainNumberOfCaradAtMainDeck();
         NextTurn();
     }
     

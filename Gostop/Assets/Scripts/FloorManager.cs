@@ -5,6 +5,7 @@ using UnityEngine;
 public class FloorManager : MonoBehaviour
 {
     public static int numberOfSeasons = 12;
+    public static int weight = 0;
     static float flySpeed = 2f;
     public enum PlayResult
     {
@@ -29,6 +30,11 @@ public class FloorManager : MonoBehaviour
         return;
     }
 
+    public int movedIndex(int trueSeason)
+    {
+        return (trueSeason - 1 + weight) % numberOfSeasons + 1;
+    }
+
     public bool FloorNullCheck()
     {
         bool output = true;
@@ -41,19 +47,19 @@ public class FloorManager : MonoBehaviour
 
     public void AddCardOnFloor(Card card)
     {
-        floors[card.cardSeason - 1].GetComponent<FloorCards>().AddCardToThisFloorWithDrawing(card);
+        floors[movedIndex(card.cardSeason)-1].GetComponent<FloorCards>().AddCardToThisFloorWithDrawing(card);
         return;
     }
 
     public void AddCardOnFloorFromHand(Card card)
     {
-        floors[card.cardSeason - 1].GetComponent<FloorCards>().AddCardToThisFloorFromHand(card);
+        floors[movedIndex(card.cardSeason) - 1].GetComponent<FloorCards>().AddCardToThisFloorFromHand(card);
         return;
     }
 
     public void AddCardOnFloorFromMainDeck(Card card)
     {
-        floors[card.cardSeason - 1].GetComponent<FloorCards>().AddCardToThisFloorFromMainDeck(card);
+        floors[movedIndex(card.cardSeason) - 1].GetComponent<FloorCards>().AddCardToThisFloorFromMainDeck(card);
         return;
     }
 
@@ -63,7 +69,7 @@ public class FloorManager : MonoBehaviour
             return false;
         Card topCard = GameManager.instance.topCard;
         StartCoroutine(FlyingMainCard(topCard, inputCard, 
-            floors[topCard.cardSeason-1].GetComponent<FloorCards>().initPositionOfThisFloor-initPositionOftopCard, season));
+            floors[movedIndex(topCard.cardSeason) - 1].GetComponent<FloorCards>().initPositionOfThisFloor-initPositionOftopCard, season));
         return true;
     }
 
@@ -85,20 +91,19 @@ public class FloorManager : MonoBehaviour
             yield return new WaitForSeconds(GameManager.animInterval);
         }
         ResetTopCardObject();
-        floors[season - 1].GetComponent<FloorCards>().ResetFlyingCard();
-        GameManager.instance.floor.GetComponent<FloorManager>().SetPlayResult(floors[season-1].GetComponent<FloorCards>().AddCardToThisFloorWithDrawing(inputCard));
+        floors[movedIndex(season)-1].GetComponent<FloorCards>().ResetFlyingCard();
+        GameManager.instance.floor.GetComponent<FloorManager>().SetPlayResult(floors[movedIndex(season) - 1].GetComponent<FloorCards>().AddCardToThisFloorWithDrawing(inputCard));
         
         GameManager.instance.NextTurn();
-        GameManager.instance.showindow.GetComponent<RemainCard>().ShowRemainNumberOfCaradAtMainDeck();
-        GameManager.instance.gState = GameManager.GameState.MyTurn;
+        GameManager.instance.remainNumber.GetComponent<RemainCard>().ShowRemainNumberOfCaradAtMainDeck();
     }
 
     public void Initializing()
     {
-        for (int i = 0; i < numberOfSeasons; i++)
+        for (int i = 1; i <= numberOfSeasons; i++)
         {
-            floors[i].GetComponent<FloorCards>().SetSeason(i + 1);
-            floors[i].GetComponent<FloorCards>().Initializing();
+            floors[movedIndex(i)-1].GetComponent<FloorCards>().SetSeason(i);
+            floors[movedIndex(i)-1].GetComponent<FloorCards>().Initializing();
         }
         initPositionOftopCard = topCard.transform.position;
     }
